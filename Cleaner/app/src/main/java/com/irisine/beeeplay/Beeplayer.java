@@ -4,8 +4,8 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-import com.irisine.mediatest.R;
 import com.irisine.wordsfilter.FilteredRange;
+import com.techf5ve.cleaner.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.TimerTask;
 /**
  * Created by yuwen on 2017/11/4 0004.
  */
-public enum  Beeplayer {
+public enum Beeplayer {
     Instance;
 
     MediaPlayer m_mainPlayer = null;
@@ -40,7 +40,7 @@ public enum  Beeplayer {
         m_beePlayer.setLooping(true);
     }
 
-    long wordsNum2SoundTime(long wordsNum){
+    long wordsNum2SoundTime(long wordsNum) {
         return wordsNum * (m_wholeTime / m_maxNum);
     }
 
@@ -51,7 +51,7 @@ public enum  Beeplayer {
     * */
     public void play(String orgSoundPath, ArrayList<FilteredRange> filteredRanges, int maxNum, AudioManager audioManager) throws IOException {
 
-        if(m_mainPlayer != null && m_mainPlayer.isPlaying()) {
+        if (m_mainPlayer != null && m_mainPlayer.isPlaying()) {
             return;
         }
 
@@ -78,33 +78,32 @@ public enum  Beeplayer {
                     @Override
                     public void run() {
 
-                        if(m_currentRangeIndex >= m_filteredRanges.size()) {
+                        if (m_currentRangeIndex >= m_filteredRanges.size()) {
                             m_timer.cancel();
                             return;
                         }
 
                         long from = wordsNum2SoundTime(m_filteredRanges.get(m_currentRangeIndex).getFrom());
                         long to = wordsNum2SoundTime(m_filteredRanges.get(m_currentRangeIndex).getTo());
-                        if(m_currentTime >= from
-                                && m_currentTime < to) {
+                        if (m_currentTime >= from + 200
+                                && m_currentTime < to  + 700) {
                             // do bee
-                            if(!m_beePlayer.isPlaying()) {
+                            if (!m_beePlayer.isPlaying()) {
 //                              m_beePlayer.prepare();
                                 m_beePlayer.start();
-                                m_mainPlayer.setVolume(0, 0);
+                                m_mainPlayer.setVolume(-1, -1);
                             }
-                        }
-                        else if(m_currentTime >= to) {
-                            if(m_beePlayer.isPlaying()) {
+                        } else if (m_currentTime >= to  + 200) {
+                            if (m_beePlayer.isPlaying()) {
                                 m_beePlayer.pause();
                                 m_mainPlayer.setVolume(1, 1);
                                 ++m_currentRangeIndex;
                             }
                         }
 
-                        m_currentTime += 50;
+                        m_currentTime += 10;
                     }
-                }, 0, 50);
+                }, 0, 10);
 
             }
         });
@@ -116,22 +115,25 @@ public enum  Beeplayer {
                 mediaPlayer.release();
                 m_beePlayer.pause();
                 m_mainPlayer = null;
-                m_timer.cancel();
+                if(m_timer != null) {
+                    m_timer.cancel();
+                }
             }
         });
     }
 
     void release() {
-        if(m_timer != null) {
-            m_timer.cancel();;
+        if (m_timer != null) {
+            m_timer.cancel();
+            ;
             m_timer = null;
         }
 
-        if(m_mainPlayer != null) {
+        if (m_mainPlayer != null) {
             m_mainPlayer.release();
             m_mainPlayer = null;
         }
-        if(m_beePlayer != null) {
+        if (m_beePlayer != null) {
             m_beePlayer.release();
             m_mainPlayer = null;
         }

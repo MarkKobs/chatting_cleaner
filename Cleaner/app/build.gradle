@@ -33,6 +33,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.kailashdabhi:om-recorder:1.1.5'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
     testCompile 'junit:junit:4.12'
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.1'
 }
