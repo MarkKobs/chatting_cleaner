@@ -86,12 +86,12 @@ public enum Beeplayer {
                         long from = wordsNum2SoundTime(m_filteredRanges.get(m_currentRangeIndex).getFrom());
                         long to = wordsNum2SoundTime(m_filteredRanges.get(m_currentRangeIndex).getTo());
                         if (m_currentTime >= from + 200
-                                && m_currentTime < to  + 700) {
+                                && m_currentTime < to  + 400) {
                             // do bee
+                            m_mainPlayer.setVolume(0, 0);
                             if (!m_beePlayer.isPlaying()) {
 //                              m_beePlayer.prepare();
                                 m_beePlayer.start();
-                                m_mainPlayer.setVolume(-1, -1);
                             }
                         } else if (m_currentTime >= to  + 200) {
                             if (m_beePlayer.isPlaying()) {
