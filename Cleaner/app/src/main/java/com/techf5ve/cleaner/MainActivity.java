@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recordBtn)
     AppCompatButton recordBtn;
+    @BindView(R.id.replayBtn)
+    AppCompatButton replayBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,6 +158,19 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
+    private String str;
+
+    @OnClick(R.id.replayBtn)
+    public void onReplay() {
+        try {
+            if (dict == null) return;
+            FilterResult filterResult = SimpleWordsFilter.Instance.filter(str, dict, true);
+            Beeplayer.Instance.play(file_new, filterResult.getResultRanges(), filterResult.getResultString().length(), audioManager);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     //FIXME
     @OnClick(R.id.recordBtn)
     public void onClick() {
@@ -171,12 +186,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            String str = getUnisound(file);
+                            str = getUnisound(file);
                             Log.e("TAG", str);
                             Util.startPcmToWav(file, file_new);
                             ArrayList<String> list = getJson();
                             FilterResult filterResult = SimpleWordsFilter.Instance.filter(str, list, true);
-                            //FIXME
                             Beeplayer.Instance.play(file_new, filterResult.getResultRanges(), filterResult.getResultString().length(), audioManager);
                             Message msg = new Message();
                             msg.what = 200;
@@ -216,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<String> getJson() {
         if (dict == null) {
-            //FIXME
+            //FIXME 判空
             initJson();
         }
         return dict;
